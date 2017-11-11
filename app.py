@@ -1,14 +1,15 @@
 from datetime import datetime
-from flask import Flask, Response
+from flask import Flask, Response, render_template, jsonify
 from sklearn.externals import joblib
 
 app = Flask(__name__)
 clf = joblib.load('models/randomtree-10-4-2017-11-11.pkl')
 
+@app.route('/')
+def index():
+	return render_template('index.html')
 
-def _predict(time=None):
-    if time is None:
-        time = datetime.now()
+def _predict(time=datetime.now()):
     dow = time.weekday()
     hour = time.hour
     minute = time.minute + hour * 60
@@ -25,7 +26,11 @@ def _predict(time=None):
 def predict():
     # json.dumps doesn't know how to handle numpy int64s,
     # but fortunately the repr of `predict` happens to be valid json
-    response = Response(repr(_predict()), mimetype='application/json')
+    prediction = _predict()
+    response = jsonify([
+        float(prediction[0][1]),
+        float(prediction[1][1]),
+    ])
     # Make sure this won't be cached for more than a minute
     response.cache_control.max_age = 60
     return response

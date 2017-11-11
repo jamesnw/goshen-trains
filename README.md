@@ -36,7 +36,7 @@ Setup:
 
 ```
 $ heroku login
-$ heroku git:remote add is-it-training
+$ heroku git:remote -a is-it-training
 ```
 
 Deploying:
