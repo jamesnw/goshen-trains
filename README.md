@@ -20,6 +20,14 @@ Some basic data exploration
 
 Loads the model, and predicts whether a train is present or not for a given time (default now)
 
+### Flask app
+
+```
+$ python app.py
+```
+
+Open http://localhost:5000/prediction/
+
 ### Deploying to heroku
 
 First, install the heroku command line tools.
