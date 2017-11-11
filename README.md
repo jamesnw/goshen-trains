@@ -42,11 +42,5 @@ $ heroku git:remote -a is-it-training
 Deploying:
 
 ```
-$ git checkout -b new-branch
-$ git add path/to/model
-$ git commit -m "Add model"
-$ git push heroku new-branch:master
+$ git push heroku master
 ```
-
-This creates a new branch, commits the model to it, and deploys it to heroku.
-This way the model is available on heroku but does not get pushed to github.

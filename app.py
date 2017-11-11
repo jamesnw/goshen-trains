@@ -1,15 +1,19 @@
 from datetime import datetime
-from flask import Flask, Response, render_template, jsonify
+from flask import Flask, render_template, jsonify
 from sklearn.externals import joblib
 
 app = Flask(__name__)
 clf = joblib.load('models/randomtree-10-4-2017-11-11.pkl')
 
+
 @app.route('/')
 def index():
-	return render_template('index.html')
+    return render_template('index.html')
 
-def _predict(time=datetime.now()):
+
+def _predict(time=None):
+    if time is None:
+        time = datetime.now()
     dow = time.weekday()
     hour = time.hour
     minute = time.minute + hour * 60
