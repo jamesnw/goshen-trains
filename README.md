@@ -20,3 +20,33 @@ Some basic data exploration
 
 Loads the model, and predicts whether a train is present or not for a given time (default now)
 
+### Flask app
+
+```
+$ python app.py
+```
+
+Open http://localhost:5000/prediction/
+
+### Deploying to heroku
+
+First, install the heroku command line tools.
+
+Setup:
+
+```
+$ heroku login
+$ heroku git:remote add is-it-training
+```
+
+Deploying:
+
+```
+$ git checkout -b new-branch
+$ git add path/to/model
+$ git commit -m "Add model"
+$ git push heroku new-branch:master
+```
+
+This creates a new branch, commits the model to it, and deploys it to heroku.
+This way the model is available on heroku but does not get pushed to github.
