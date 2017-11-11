@@ -6,7 +6,9 @@ app = Flask(__name__)
 clf = joblib.load('models/randomtree-10-4-2017-11-11.pkl')
 
 
-def _predict(time=datetime.now()):
+def _predict(time=None):
+    if time is None:
+        time = datetime.now()
     dow = time.weekday()
     hour = time.hour
     minute = time.minute + hour * 60
