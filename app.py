@@ -23,7 +23,10 @@ def _predict(time=datetime.now()):
 def predict():
     # json.dumps doesn't know how to handle numpy int64s,
     # but fortunately the repr of `predict` happens to be valid json
-    return Response(repr(_predict()), mimetype='application/json')
+    response = Response(repr(_predict()), mimetype='application/json')
+    # Make sure this won't be cached for more than a minute
+    response.cache_control.max_age = 60
+    return response
 
 
 if __name__ == '__main__':
