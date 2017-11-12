@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask, render_template, jsonify
+from flask import Flask, jsonify
 from sklearn.externals import joblib
 
 app = Flask(__name__)
@@ -8,7 +8,7 @@ clf = joblib.load('models/randomtree-10-4-2017-11-11.pkl')
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return app.send_static_file('index.html')
 
 
 def _predict(time=None):

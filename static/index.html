@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Is it training?</title>
+  <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
+  <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet" type="text/css"></link>
+  <link href="static/styles.css" rel="stylesheet" type="text/css">
+  <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
+</head>
+<body>
+  <div id="app">
+    <v-app dark>
+      <v-toolbar fixed app>
+        <v-toolbar-title v-text="title"></v-toolbar-title>
+      </v-toolbar>
+      <main>
+        <v-content>
+          <v-container fluid>
+            <page></page>
+          </v-container>
+        </v-content>
+      </main>
+      <v-footer :fixed="fixed" app>
+        <span>Based on data from <a href="https://sites.google.com/site/goshentrains/" target="_blank">Douglas Miller.</a></span>
+      </v-footer>
+    </v-app>
+  </div>
+
+  <script type="text/x-template" id="page">
+    <v-layout column align-center>
+      <p>Is there a train crossing <a href="https://www.google.com/maps/@41.5865592,-85.8275709,3a,90y,342.1h,85.66t/data=!3m6!1e1!3m4!1sM8wbXVB9Gedv4h5K1yv6gg!2e0!7i13312!8i6656" target="_blank">Lincoln in Goshen?</a></p>
+      <transition name="fade" appear mode="out-in">
+        <h1 :key="message">
+          {{message}}
+        </h1>
+      </transition>
+      <transition name="fade" appear mode="out-in">
+        <h2 :key="certainty">
+          {{certainty}}
+        </h2>
+      </transition>
+      <p>And we're wrong 25% of the time.</p>
+    </v-layout>
+  </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
+  <script>
+
+    Vue.component('page', {
+      template: '#page',
+      data: function(){
+        return {
+          message: "?",
+          certainty: "?",
+        }
+      },
+      created: function(){
+        var vm = this;
+        function getPrediction(){
+          $.ajax({url:'/prediction/'}).then(function(response){
+            var no_train = response[0];
+            var train = response[1];
+            vm.message = (train > no_train) ? 'Yup.' : 'Nope.'
+            vm.certainty = "Well, we're " + Math.round(Math.max(no_train, train)*100) + '% sure.'
+          });
+        }
+        getPrediction();
+        setInterval(getPrediction,1000*30);
+
+      }
+    })
+    new Vue({
+      el: '#app',
+      data: {
+        clipped: false,
+        drawer: true,
+        fixed: false,
+        items: [
+          { icon: 'bubble_chart', title: 'Inspire' }
+        ],
+        miniVariant: false,
+        right: true,
+        rightDrawer: false,
+        title: 'Is it training?'
+      }
+    })
+  </script>
+</body>
+</html>
