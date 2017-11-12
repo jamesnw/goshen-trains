@@ -43,11 +43,17 @@
         </h2>
       </transition>
       <p>And we're wrong 25% of the time.</p>
+      <v-slider label="Graph Range:" v-model="graphRange" dark min="3" max="120" thumb-color="red lighten-2" color="red lighten-2"></v-slider>
+      <gt-line-chart :chartData="chartData"></gt-line-chart>
     </v-layout>
+  </script>
+  <script type="text/x-template" id="graph">
+
   </script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://unpkg.com/vue/dist/vue.js"></script>
   <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
+  <script src="https://unpkg.com/vue-chartjs@2.8.7/dist/vue-chartjs.full.min.js"></script>
   <script>
 
     Vue.component('page', {
@@ -55,7 +61,8 @@
       data: function(){
         return {
           predictions: [],
-          now: new Date()
+          now: new Date(),
+          graphRange: 10,
         }
       },
       computed: {
@@ -74,6 +81,32 @@
         certainty: function(){
           var c = this.currentPrediction > 0.5 ? this.currentPrediction : 1 - this.currentPrediction;
           return "Well, we're " + Math.round(c*100) + '% sure.'
+        },
+        graphPredictions: function(){
+          var range = this.graphRange;
+          var start = this.timeIndex - Math.floor(range/2);
+          var end = start + range;
+          var predict = this.predictions.slice(start,end);
+          return predict.map(x => (1 - x) * 100)
+        },
+        graphLabels: function(){
+          var y = this.graphRange;
+          return Array(y).fill(0).map(function(x,i){
+            var l =  i - Math.floor(y/2) + 'min';
+            return l === '0min' ? 'now' : l;
+          })
+        },
+        chartData: function(){
+          return {
+            labels: this.graphLabels,
+            datasets: [
+              {
+                label: 'Chance of train',
+                backgroundColor: '#f87979',
+                data: this.graphPredictions
+              }
+            ]
+          }
         }
       },
       created: function(){
@@ -94,6 +127,25 @@
           this.now = new Date();
         }
       }
+    })
+    Vue.component('gt-line-chart', {
+      extends: VueChartJs.Line,
+      mixins: [VueChartJs.mixins.reactiveProp],
+      mounted () {
+        this.renderChart(this.chartData, {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            yAxes: [{
+              ticks: {
+                min: 0,
+                max: 100
+              }
+            }]
+          }
+      })
+      }
+
     })
     new Vue({
       el: '#app',
