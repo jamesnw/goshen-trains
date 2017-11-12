@@ -54,23 +54,45 @@
       template: '#page',
       data: function(){
         return {
-          message: "?",
-          certainty: "?",
+          predictions: [],
+          now: new Date()
+        }
+      },
+      computed: {
+        timeIndex: function(){
+          var day = this.now.getDay();
+          var hours = this.now.getHours();
+          var minutes = this.now.getMinutes();
+          return day * 1440 + hours * 60 + minutes;
+        },
+        currentPrediction: function(){
+          return this.predictions[this.timeIndex];
+        },
+        message: function(){
+          return this.currentPrediction > 0.5 ? 'Nope.' : 'Yup.'
+        },
+        certainty: function(){
+          var c = this.currentPrediction > 0.5 ? this.currentPrediction : 1 - this.currentPrediction;
+          return "Well, we're " + Math.round(c*100) + '% sure.'
         }
       },
       created: function(){
         var vm = this;
-        function getPrediction(){
-          $.ajax({url:'/prediction/'}).then(function(response){
-            var no_train = response[0];
-            var train = response[1];
-            vm.message = (train > no_train) ? 'Yup.' : 'Nope.'
-            vm.certainty = "Well, we're " + Math.round(Math.max(no_train, train)*100) + '% sure.'
+        function getPredictions(){
+          $.ajax({url:'static/predict.json'}).then(function(response){
+            vm.predictions = response;
           });
         }
-        getPrediction();
-        setInterval(getPrediction,1000*30);
+        getPredictions();
+        // setInterval(getPrediction,1000*30);
+        setInterval(this.updateNow.bind(this) , 1000)
+        this.updateNow();
 
+      },
+      methods: {
+        updateNow: function(){
+          this.now = new Date();
+        }
       }
     })
     new Vue({
