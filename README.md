@@ -1,5 +1,7 @@
 # Goshen Trains
 
+Check it out live at http://is-it-training.herokuapp.com/.
+
 This project uses data collected at https://sites.google.com/site/goshentrains/ by Douglas Miller. Check out his site to see some really interesting techniques and other analysis.
 
 ## Files

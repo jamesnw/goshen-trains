@@ -42,9 +42,29 @@
           {{certainty}}
         </h2>
       </transition>
-      <p>And we're wrong 25% of the time.</p>
-      <v-slider label="Graph Range:" v-model="graphRange" dark min="3" max="120" thumb-color="red lighten-2" color="red lighten-2"></v-slider>
+      <p>
+        And we're wrong 24.4% of the time.
+        <v-tooltip top>
+          <v-btn icon slot="activator">
+            <v-icon color="grey lighten-1">help</v-icon>
+          </v-btn>
+          <span>Our model predicted with 75.6% accuracy against our test set.</span>
+        </v-tooltip>
+      </p>
       <gt-line-chart :chartData="chartData" style="width: 100%; height: 200px"></gt-line-chart>
+      <v-slider label="Graph Range:" v-model="graphRange" dark min="3" max="120" thumb-color="red lighten-2" color="red lighten-2"></v-slider>
+      <v-expansion-panel dark>
+      <v-expansion-panel-content>
+        <div slot="header">What wizardry is this?</div>
+        <v-card>
+          <v-card-text class="grey darken-2">
+            <p>This is based on data from <a href="https://sites.google.com/site/goshentrains/" target="_blank">Douglas Miller.</a> Based on roughly a month of data, we built a model that predicts the probability of a train at the crossing given the time.</p>
+            <p>We used a Random Forest Classifier, which decides how important different data points are. With the current model, about 80% is coming from the minute of the day, and the other 20% is coming from the day of the week.</p>
+            <p>Check out the code this site and the models on <a href="https://github.com/jamesnw/goshen-trains" target="_blank">Github</a>. Please feel free to jump in and make improvements!</p>
+          </v-card-text>
+        </v-card>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
     </v-layout>
   </script>
   <script type="text/x-template" id="graph">
@@ -76,15 +96,21 @@
           return this.predictions[this.timeIndex];
         },
         message: function(){
-          return this.currentPrediction > 0.5 ? '🛤 Nope.' : '🚂 Yup.'
+          if(this.currentPrediction)
+            return this.currentPrediction > 0.5 ? '🛤 Nope.' : '🚂 Yup.'
+          else return "..."
         },
         certainty: function(){
           var c = this.currentPrediction > 0.5 ? this.currentPrediction : 1 - this.currentPrediction;
-          c = Math.round(c*100);
-          if(c === 100) return "And we are " + c + "% positive."
-          else if(c > 90) return "And we are " + c + "% sure."
-          else if(c > 70) return "Well, we are " + c + "% sure."
-          else return "Maybe. We're only " + c + "% sure."
+          if(c){
+            c = Math.round(c*100);
+            if(c === 100) return "And we are " + c + "% positive."
+            else if(c > 85) return "And we are " + c + "% sure."
+            else if(c > 70) return "Well, we are " + c + "% sure."
+            else return "Maybe. We're only " + c + "% sure."
+          } else {
+            return "..."
+          }
         },
         graphPredictions: function(){
           var range = this.graphRange;
