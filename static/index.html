@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Is it training?</title>
+  <title>🚂 Is it training?</title>
   <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
   <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet" type="text/css"></link>
   <link href="static/styles.css" rel="stylesheet" type="text/css">
@@ -62,7 +62,7 @@
         return {
           predictions: [],
           now: new Date(),
-          graphRange: 10,
+          graphRange: 11,
         }
       },
       computed: {
@@ -76,7 +76,7 @@
           return this.predictions[this.timeIndex];
         },
         message: function(){
-          return this.currentPrediction > 0.5 ? 'Nope.' : 'Yup.'
+          return this.currentPrediction > 0.5 ? '🛤 Nope.' : '🚂 Yup.'
         },
         certainty: function(){
           var c = this.currentPrediction > 0.5 ? this.currentPrediction : 1 - this.currentPrediction;
