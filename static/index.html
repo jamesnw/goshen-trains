@@ -76,7 +76,7 @@
           return this.predictions[this.timeIndex];
         },
         message: function(){
-          return this.currentPrediction > 0.5 ? 'Nope.' : 'Yup.'
+          return this.currentPrediction > 0.5 ? '🛤 Nope.' : '🚂 Yup.'
         },
         certainty: function(){
           var c = this.currentPrediction > 0.5 ? this.currentPrediction : 1 - this.currentPrediction;
