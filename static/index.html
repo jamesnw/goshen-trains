@@ -80,7 +80,11 @@
         },
         certainty: function(){
           var c = this.currentPrediction > 0.5 ? this.currentPrediction : 1 - this.currentPrediction;
-          return "Well, we're " + Math.round(c*100) + '% sure.'
+          c = Math.round(c*100);
+          if(c === 100) return "And we are " + c + "% positive."
+          else if(c > 90) return "And we are " + c + "% sure."
+          else if(c > 70) return "Well, we are " + c + "% sure."
+          else return "Maybe. We're only " + c + "% sure."
         },
         graphPredictions: function(){
           var range = this.graphRange;
