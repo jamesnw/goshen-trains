@@ -60,7 +60,7 @@
           <v-card-text class="grey darken-2">
             <p>This is based on data from <a href="https://sites.google.com/site/goshentrains/" target="_blank">Douglas Miller.</a> Based on roughly a month of data, we built a model that predicts the probability of a train at the crossing given the time.</p>
             <p>We used a Random Forest Classifier, which decides how important different data points are. With the current model, about 80% is coming from the minute of the day, and the other 20% is coming from the day of the week.</p>
-            <p>Check out the code this site and the models on <a href="https://github.com/jamesnw/goshen-trains" target="_blank">Github</a>. Please feel free to jump in and make improvements!</p>
+            <p>Check out the code for this site and the models on <a href="https://github.com/jamesnw/goshen-trains" target="_blank">Github</a>. Please feel free to jump in and make improvements!</p>
           </v-card-text>
         </v-card>
       </v-expansion-panel-content>
@@ -148,14 +148,16 @@
           });
         }
         getPredictions();
-        // setInterval(getPrediction,1000*30);
-        setInterval(this.updateNow.bind(this) , 1000)
+        setInterval(this.updateNow.bind(this), 1000 * 10)
+        setInterval(this.updateTitle.bind(this), 1000)
         this.updateNow();
 
       },
       methods: {
         updateNow: function(){
           this.now = new Date();
+        },
+        updateTitle: function(){
           var title = "Is it training?"
           this.trainIconIndex = this.trainIconIndex - 1;
           if(this.trainIconIndex <0) this.trainIconIndex = title.length;
