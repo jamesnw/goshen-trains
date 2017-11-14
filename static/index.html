@@ -83,6 +83,7 @@
           predictions: [],
           now: new Date(),
           graphRange: 11,
+          trainIconIndex: 0
         }
       },
       computed: {
@@ -155,6 +156,10 @@
       methods: {
         updateNow: function(){
           this.now = new Date();
+          var title = "Is it training?"
+          this.trainIconIndex = this.trainIconIndex - 1;
+          if(this.trainIconIndex <0) this.trainIconIndex = title.length;
+          document.title = title.slice(0,this.trainIconIndex) + '🚂' + title.slice(this.trainIconIndex)
         }
       }
     })
